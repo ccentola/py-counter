@@ -28,4 +28,4 @@ def test_counter_is_not_negative(monkeypatch, capsys):
     captured = capsys.readouterr().out
 
     assert "0" in captured
-    assert "Counter cannot be less than 0" in captured
+    assert "Counter cannot be negative" in captured

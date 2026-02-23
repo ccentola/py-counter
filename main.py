@@ -1,5 +1,8 @@
+from counter import Counter
+
+
 def main():
-    current = 0
+    current = Counter()
 
     # menu
     print("===== Welcome to py-counter =====")
@@ -15,17 +18,15 @@ def main():
         )
         match user_input:
             case "i":
-                current += 1
-                print(current)
+                current.increment()
             case "d":
-                if current == 0:
-                    print("Counter cannot be less than 0")
-                else:
-                    current -= 1
-                    print(current)
+                try:
+                    current.decrement()
+                except ValueError as e:
+                    print(f"Error: {e}")
             case "r":
-                current = 0
-                print(current)
+                current.reset()
+                print("Counter reset to 0")
             case "quit":
                 break
             case _:
