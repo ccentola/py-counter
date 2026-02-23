@@ -18,8 +18,11 @@ def main():
                 current += 1
                 print(current)
             case "d":
-                current -= 1
-                print(current)
+                if current == 0:
+                    print("Counter cannot be less than 0")
+                else:
+                    current -= 1
+                    print(current)
             case "r":
                 current = 0
                 print(current)
