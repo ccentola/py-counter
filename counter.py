@@ -1,26 +1,53 @@
+from database import get_connection
+
+
 class Counter:
-    """
-    A simple accumulator that manages a non-negative integer state.
+    def __init__(self, name: str, db_path: str) -> None:
+        self.name = name
+        self._db_path = db_path
+        with get_connection(self._db_path) as conn:
+            conn.execute(
+                "INSERT OR IGNORE INTO counters (name, value) VALUES (?, 0)",
+                (self.name,),
+            )
 
-    This class provides core logic for incrementing, decrementing, and
-    resetting a counter value, ensuring the value never drops below zero.
+    @property
+    def value(self) -> int:
+        with get_connection(self._db_path) as conn:
+            row = conn.execute(
+                "SELECT value FROM counters WHERE name = ?", (self.name,)
+            ).fetchone()
+        return row["value"]
 
-    Attributes:
-        value (int): The current count held by the instance.
-    """
-
-    def __init__(self, initial_value=0) -> None:
-        """
-        Initializes the Counter with an optional starting value.
-
-        Args:
-            initial_value (int): The number to start the counter at. Defaults to 0.
-        """
-        self.value = initial_value
+    @property
+    def history(self) -> list:
+        with get_connection(self._db_path) as conn:
+            rows = conn.execute(
+                """
+                SELECT e.operation, e.value_after, e.occurred_at
+                FROM events e
+                JOIN counters c ON c.id = e.counter_id
+                WHERE c.name = ?
+                ORDER BY e.id ASC
+                """,
+                (self.name,),
+            ).fetchall()
+        return [dict(row) for row in rows]
 
     def increment(self) -> None:
         """Adds 1 to the current value"""
-        self.value += 1
+        with get_connection(self._db_path) as conn:
+            conn.execute(
+                "UPDATE counters SET value = value + 1 WHERE name = ?",
+                (self.name,),
+            )
+            conn.execute(
+                """
+                INSERT INTO events (counter_id, operation, value_after)
+                SELECT id, 'increment', value FROM counters WHERE name = ?
+                """,
+                (self.name,),
+            )
 
     def decrement(self) -> None:
         """
@@ -31,11 +58,33 @@ class Counter:
         """
         if self.value <= 0:
             raise ValueError("Counter cannot be negative")
-        self.value -= 1
+        with get_connection(self._db_path) as conn:
+            conn.execute(
+                "UPDATE counters SET value = value - 1 WHERE name = ?",
+                (self.name,),
+            )
+            conn.execute(
+                """
+                INSERT INTO events (counter_id, operation, value_after)
+                SELECT id, 'decrement', value FROM counters WHERE name = ?
+                """,
+                (self.name,),
+            )
 
     def reset(self) -> None:
         """Resets the current counter to 0"""
-        self.value = 0
+        with get_connection(self._db_path) as conn:
+            conn.execute(
+                "UPDATE counters SET value = 0 WHERE name = ?",
+                (self.name,),
+            )
+            conn.execute(
+                """
+                INSERT INTO events (counter_id, operation, value_after)
+                SELECT id, 'reset', value FROM counters WHERE name = ?
+                """,
+                (self.name,),
+            )
 
     def __str__(self) -> str:
         return str(self.value)
