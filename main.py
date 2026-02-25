@@ -1,5 +1,5 @@
-from counter import Counter
-from database import initialize_db, DB_PATH
+from app.counter import Counter
+from app.database import initialize_db, DB_PATH
 
 
 def run(db: str = DB_PATH):

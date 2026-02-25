@@ -1,8 +1,8 @@
 import os
 import pytest
 from fastapi.testclient import TestClient
-from database import initialize_db
-from api import app, get_db
+from app.database import initialize_db
+from app.api import app, get_db
 
 TEST_DB = "test_api.db"
 

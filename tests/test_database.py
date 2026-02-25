@@ -1,5 +1,5 @@
 import pytest
-from database import initialize_db, get_connection
+from app.database import initialize_db, get_connection
 
 
 # UNIT TESTS ===================================================================
