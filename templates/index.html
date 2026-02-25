@@ -5,11 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>py-counter</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.4/htmx.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            background-color: #e8e8e8;
+            border-radius: 24px;
+            padding: 40px 60px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #e803fc;
+            -webkit-text-stroke: 0.5px #333;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        #counter-value p {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            background-color: transparent;
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        button:hover {
+            background-color: transparent;
+            color: #777;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .reset {
+            font-size: 16px;
+            padding: 8px 32px;
+        }
+
+        #counter-value p:first-child {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        #counter-value #counter-error {
+            color: red;
+            font-size: 14px;
+            margin: 0;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <p id="counter-value">{{ value }}</p>
-    <button hx-post="/increment" hx-target="#counter-value" hx-swap="outerHTML">Increment</button>
-    <button hx-post="/decrement" hx-target="#counter-value" hx-swap="outerHTML">Decrement</button>
-    <button hx-post="/reset" hx-target="#counter-value" hx-swap="outerHTML">Reset</button>
+    <div class="card">
+        <h1>py-counter</h1>
+        <div class="controls">
+            <button hx-post="/decrement" hx-target="#counter-value" hx-swap="outerHTML"><i class="fa-solid fa-minus"></i></button>
+            <div id="counter-value">
+                <p>{{ value }}</p>
+            </div>
+            <button hx-post="/increment" hx-target="#counter-value" hx-swap="outerHTML"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <button class="reset" hx-post="/reset" hx-target="#counter-value" hx-swap="outerHTML"><i class="fa-solid fa-rotate-left"></i></button>
+    </div>
 </body>
 </html>
