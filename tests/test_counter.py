@@ -1,7 +1,7 @@
 import os
 import pytest
-from database import initialize_db, get_connection
-from counter import Counter
+from app.database import initialize_db, get_connection
+from app.counter import Counter
 from main import run
 
 DB = "test_counter.db"

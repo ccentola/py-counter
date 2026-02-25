@@ -1,12 +1,13 @@
 from fastapi import FastAPI, Depends, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from counter import Counter
-from database import DB_PATH
+from app.counter import Counter
+from app.database import DB_PATH
+from pathlib import Path
 
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
 
 def get_db():
