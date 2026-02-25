@@ -1,9 +1,10 @@
+from pathlib import Path
 from fastapi import FastAPI, Depends, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from app.counter import Counter
 from app.database import DB_PATH
-from pathlib import Path
+from app.visuals import build_svg
 
 
 app = FastAPI()
@@ -20,7 +21,7 @@ def home(request: Request, db: str = Depends(get_db)):
     return templates.TemplateResponse(
         request,
         "index.html",
-        {"value": counter.value},
+        {"value": counter.value, "svg": build_svg(counter.value)},
     )
 
 
@@ -31,7 +32,7 @@ def increment(request: Request, db: str = Depends(get_db)):
     return templates.TemplateResponse(
         request,
         "counter.html",
-        {"value": counter.value},
+        {"value": counter.value, "svg": build_svg(counter.value)},
     )
 
 
@@ -43,13 +44,17 @@ def decrement(request: Request, db: str = Depends(get_db)):
         return templates.TemplateResponse(
             request,
             "counter.html",
-            {"value": counter.value},
+            {"value": counter.value, "svg": build_svg(counter.value)},
         )
     except ValueError as e:
         return templates.TemplateResponse(
             request,
             "counter.html",
-            {"value": counter.value, "error": str(e)},
+            {
+                "value": counter.value,
+                "error": str(e),
+                "svg": build_svg(counter.value),
+            },
         )
 
 
@@ -60,5 +65,5 @@ def reset(request: Request, db: str = Depends(get_db)):
     return templates.TemplateResponse(
         request,
         "counter.html",
-        {"value": counter.value},
+        {"value": counter.value, "svg": build_svg(counter.value)},
     )

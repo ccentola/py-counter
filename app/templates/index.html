@@ -9,9 +9,10 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             font-family: sans-serif;
             background-color: #f0f0f0;
@@ -26,6 +27,12 @@
             border-radius: 24px;
             padding: 40px 60px;
             box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
+
+        #counter-svg {
+            margin-top: 24px;
+            overflow-x: auto;
+            max-width: 80vw;
         }
 
         .card h1 {
@@ -92,13 +99,20 @@
     <div class="card">
         <h1>py-counter</h1>
         <div class="controls">
-            <button hx-post="/decrement" hx-target="#counter-value" hx-swap="outerHTML"><i class="fa-solid fa-minus"></i></button>
+            <button hx-post="/decrement" hx-target="#counter-value" hx-swap="outerHTML">
+                <i class="fa-solid fa-minus"></i>
+            </button>
             <div id="counter-value">
                 <p>{{ value }}</p>
             </div>
-            <button hx-post="/increment" hx-target="#counter-value" hx-swap="outerHTML"><i class="fa-solid fa-plus"></i></button>
+            <button hx-post="/increment" hx-target="#counter-value" hx-swap="outerHTML">
+                <i class="fa-solid fa-plus"></i>
+            </button>
         </div>
-        <button class="reset" hx-post="/reset" hx-target="#counter-value" hx-swap="outerHTML"><i class="fa-solid fa-rotate-left"></i></button>
+        <button class="reset" hx-post="/reset" hx-target="#counter-value" hx-swap="outerHTML">
+            <i class="fa-solid fa-rotate-left"></i>
+        </button>
     </div>
+    <div id="counter-svg">{{ svg | safe }}</div>
 </body>
 </html>
