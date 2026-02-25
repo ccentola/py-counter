@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>py-counter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.4/htmx.min.js"></script>
+</head>
+<body>
+    <p id="counter-value">{{ value }}</p>
+    <button hx-post="/increment" hx-target="#counter-value" hx-swap="outerHTML">Increment</button>
+    <button hx-post="/decrement" hx-target="#counter-value" hx-swap="outerHTML">Decrement</button>
+    <button hx-post="/reset" hx-target="#counter-value" hx-swap="outerHTML">Reset</button>
+</body>
+</html>
